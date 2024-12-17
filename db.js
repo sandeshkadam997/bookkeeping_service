@@ -4,7 +4,7 @@ require('dotenv').config();
 // const mongoURL_Local= process.env.mongoURL_Local
 const mongoURL_Atlas= process.env.mongoURL_Atlas
 
-mongoose.connect(mongoURL_Atlas, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoURL_Atlas, { useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 50000 })
 .then(() => console.log('Connected to MongoDB'))
 .catch((err) => console.error('Error connecting to MongoDB:', err));
 
