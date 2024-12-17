@@ -9,6 +9,10 @@ The Book Keeping Service is a backend application designed to manage books and l
 2. Run `npm install` to install dependencies
 3. Create a `.env` file and add the necessary environment variables
 
+## Running the Application
+- Start the application in development mode: `npm run dev`
+- Start the application in production mode: `npm start`
+
 ## Features
 
 - User Registration and Authentication: Users can sign up, log in, and authenticate using JWT tokens.
@@ -72,8 +76,7 @@ The Book Keeping Service is a backend application designed to manage books and l
 ### Delete Library
 - `DELETE /api/libraries/:id`: Delete a library by its ID.
 
-
-## Borrowing and Returning Books
+## Borrowing
 
 ### Borrow Book
 - `POST /books/borrow/:id`: Borrow a book from the library.
@@ -81,95 +84,87 @@ The Book Keeping Service is a backend application designed to manage books and l
 ### Return Book
 - `POST /books/return/:id`: Return a borrowed book.
 
-User Profile
-Get Profile
+## Library Inventory
 
-GET /users/profile: Retrieve user profile information.
-Change Password
+### Get list of books available in a specific library
+- `GET /api/libraries/:id/inventory` : Retrieve a list of books available in a specific library
 
-PUT /users/profile/password: Change user password.
-Request Body:
-json
-Copy code
-{
-  "currentPassword": "oldpassword123",
-  "newPassword": "newpassword456"
-}
+### Add a book to the inventory
+- `POST /api/libraries/:id/inventory` :  Add a book to the inventory of a specific library
+
+### Delet a book from inventory
+- `DELETE /api/libraries/:id/inventory/:bookId` : Remove a book from the inventory of a specific library by its ID
 
 ## Data Models
 ### User
 The `User` data model represents the users who can interact with the Book Keeping Service, either as a `Author` or `Borrower`.
 
 - **Fields:**
-
-- `name` (String): Name of the user (required).
-- `email` (String): Email address of the user (unique).
-- `password` (String): Password of the user (required).
-- `role` (String, Enum: ['Author', 'Borrower']): Role of the user, either as a `Author` or `Borrower`.
-- `borrowedBooks` (ObjectId): Reference to the Book model.
-- `timestamps` (Date) : Timestamp of User creation.
+  - `name` (String): Name of the user (required).
+  - `email` (String): Email address of the user (unique).
+  - `password` (String): Password of the user (required).
+  - `role` (String, Enum: ['Author', 'Borrower']): Role of the user, either as a `Author` or `Borrower`.
+  - `borrowedBooks` (ObjectId): Reference to the Book model.
+  - `timestamps` (Date) : Timestamp of User creation.
 
 - **Example:**
-```json
-{
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "password": "Password123",
-    "role": "Borrower"
-}
+  ```json
+  {
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "password": "Password123",
+      "role": "Borrower"
+  }
+  
 
 ### Books
 The `Book` data model represents the books available in a library.
 
 - **Fields:**
+  - `title` (String): Title of the book (required).
+  - `author` (ObjectId): Author of the book (required).
+  - `library` (ObjectId): Reference to the library where the book is located.
+  - `borrower` (ObjectId): List of users who have borrowed the book.
+  - `image` (String): Image of the book
+  - `timestamps` (Date) :Timestamp of Book creation.
+  
+- **Example:**
+  ```json
+  {
+      "title": "Crime and Punishment",
+      "author": "675f3d4b882baff056997995",
+      "library": "675ca4ba4b588b0241d0c7ca",
+      "borrower": "675f3be6882baff056997992",
+      "image": "cover_image_url"
+  }
+  
 
-- title (String): Title of the book (required).
-author (String): Author of the book (required).
-libraryId (ObjectId): Reference to the library where the book is located.
-quantity (Number): Number of available copies of the book.
-borrowers (Array): List of users who have borrowed the book.
-borrowedAt (Date): Timestamp when the book was borrowed.
-Example:
+### Library
+The `Library` data model represents libraries that contain books.
 
-json
-Copy code
-{
-  "title": "Introduction to Node.js",
-  "author": "John Doe",
-  "libraryId": "605b8e99a1d9c53a4b70db8e",
-  "quantity": 10,
-  "borrowers": [
-    {
-      "user": "5f8c072cb0f2b84c1a62c9bb",
-      "borrowedAt": "2023-12-17T15:00:00Z"
-    }
-  ]
-}
-Library
-The Library data model represents libraries that contain books.
+- **Fields:**
+  - `name` (String): Name of the library (required).
+  - `address` (String): Address of the library (required).
+  - `books` (ObjectId): List of books available in the library.
+  
+- **Example:**
+  ```json
+  {
+    "name": "Central Library",
+    "address": "123 Main St, City",
+    "books": [
+     {
+        "book": "605c72ef15320725e891c62a",
+        
+       }
+    ]
+  }
 
-Fields:
+## Multilingual Support
+The APIs support English for error and success messages. Use the lang query parameter to set the language (e.g., ?lang=hi).
 
-name (String): Name of the library (required).
-address (String): Address of the library (required).
-phone (String): Contact phone number of the library.
-books (Array): List of books available in the library.
-Example:
+## Authorization
+All endpoints except registration and login require a valid JWT token for access. Only authenticated users with appropriate roles can add or remove books from the library inventor
 
-json
-Copy code
-{
-  "name": "Central Library",
-  "address": "123 Main St, City",
-  "phone": "123-456-7890",
-  "books": [
-    {
-      "book": "605c72ef15320725e891c62a",
-      "quantity": 10
-    }
-  ]
-}
-Additional Notes
-Role Management: The system distinguishes between two user roles: regular users and admins. Admins can manage books, libraries, and users, while regular users can only borrow and return books.
-Borrowing Restrictions: A user can borrow only one book at a time. If the user has already borrowed a book, they cannot borrow another until the first one is returned.
-Authentication and Authorization: JWT tokens are used for secure authentication and authorization. Only authenticated users can access protected routes.
+## Additional Notes
+**Role Management:** The system distinguishes between two user roles: author and borrower. Author can manage books in libraries, while users can borrow and return books.
