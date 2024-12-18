@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 // const mongoURL_Local= process.env.mongoURL_Local
-const mongoURL_Atlas= mongodb+srv://sandeshkadam997:oNHHZ1ewtRT1G8Nd@bookeeping-service.hukoz.mongodb.net/
+const mongoURL_Atlas= "mongodb+srv://sandeshkadam997:oNHHZ1ewtRT1G8Nd@bookeeping-service.hukoz.mongodb.net/"
 // const mongoURL_Atlas= process.env.mongoURL_Atlas
 
 mongoose.connect(mongoURL_Atlas, { useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 50000 })
