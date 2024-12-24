@@ -1,4 +1,5 @@
 const Library = require('../models/library');
+const Book = require('../models/book');
 
 // GET library inventory
 exports.getLibraryInventory = async (req, res) => {
@@ -21,7 +22,7 @@ exports.addBookToInventory = async (req, res) => {
     const { id } = req.params;
     const { bookId } = req.body;
 
-    try {
+        try {
         const library = await Library.findById(id);
         if (!library) {
             return res.status(404).json({ error: 'Library not found' });

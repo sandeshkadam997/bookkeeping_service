@@ -1,9 +1,8 @@
 const Book = require('../models/book');
 
 exports.borrowBook = async (req, res) => {
-    const { bookId } = req.body;
-    const userId = req.user._id;
-
+    const { bookId,userId } = req.body;
+   
     try {
         const book = await Book.findById(bookId);
         if (!book) {
@@ -14,6 +13,7 @@ exports.borrowBook = async (req, res) => {
         }
 
         book.borrower = userId;
+        console.log(book.borrower);
         await book.save();
 
         res.status(200).json({ message: 'Book borrowed successfully' });

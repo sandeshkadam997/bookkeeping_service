@@ -21,7 +21,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/books',jwtAuthMiddleware, bookRoutes);
 app.use('/api/libraries',jwtAuthMiddleware, libraryRoutes);
 app.use('/api/borrow',jwtAuthMiddleware, borrowRoutes);
-app.use('/api/libraries/:id/inventory',jwtAuthMiddleware, libraryInventoryRoutes);
+app.use('/api/libraries',jwtAuthMiddleware, libraryInventoryRoutes);
 
 app.listen(PORT, ()=>{
     console.log('listening on port 3000');

@@ -5,12 +5,12 @@ const roleMiddleware = require('../middleware/roleMiddleware');
 const router = new express.Router();
 
 // List books in library inventory
-router.get('/',  libraryInventoryController.getLibraryInventory);
+router.get('/:id/inventory',  libraryInventoryController.getLibraryInventory);
 
 // Add a book to inventory (only Author)
-router.post('/', roleMiddleware(['Author']), libraryInventoryController.addBookToInventory);
+router.post('/:id/inventory', roleMiddleware(['Author']), libraryInventoryController.addBookToInventory);
 
 // Remove book from inventory (only Author)
-router.delete('/:bookId', roleMiddleware(['Author']), libraryInventoryController.removeBookFromInventory);
+router.delete('/:id/inventory/:bookId', roleMiddleware(['Author']), libraryInventoryController.removeBookFromInventory);
 
 module.exports = router;
