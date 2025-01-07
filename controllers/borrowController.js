@@ -2,8 +2,7 @@ const Book = require('../models/book');
 
 
 exports.borrowBook = async (req, res) => {
-    const { bookId} = req.body;
-    const userId =req.user.id;
+    const { bookId, borrowerId } = req.body;
     const lang = req.locale;
 
     try {
@@ -15,7 +14,7 @@ exports.borrowBook = async (req, res) => {
             return res.status(400).json({ error: req.t('bookAlreadyBorrowed') });
         }
 
-        book.borrower = userId;
+        book.borrower = borrowerId;
         console.log(book.borrower);
         await book.save();
 
@@ -27,10 +26,10 @@ exports.borrowBook = async (req, res) => {
 
 exports.returnBook = async (req, res) => {
     const { bookId } = req.params;
-    const userId  = req.user.id;
+    const borrowerId  = req.body;
 
     console.log("BookId:", bookId);
-    console.log("Request User ID:", userId);
+    console.log("Request User ID:", borrowerId);
 
     try {
         const book = await Book.findById(bookId);
@@ -38,7 +37,7 @@ exports.returnBook = async (req, res) => {
             return res.status(404).json({ error: req.t("bookNotFound")});
         }
         
-        if(!book.borrower.equals (userId)){
+        if(!book.borrower.equals (borrowerId)){
             return res.status(400).json({ error: req.t("bookNotBorrowedByUser") });
         }
 
