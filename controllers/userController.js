@@ -10,9 +10,9 @@ exports.registerUser = async (req, res) => {
     // Check if the user already exists
     const existingUser = await User.findOne({ email : data.email });
     if (existingUser) {
-      return res.status(400).send({ error: 'Email already exists' });
+      return res.status(400).send({ error: req.t('emailExists') });
     }
-
+                                  
     // Create a new user
     const newUser = new User(data);
     await newUser.save();
@@ -22,11 +22,11 @@ exports.registerUser = async (req, res) => {
     const token = generateToken(
         { _id: newUser._id, role: newUser.role }, 
          process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.status(200).json({ response: newUser, token: token });
+        res.status(200).json({ response: req.t('userCreated'), token: token });
 
   } catch (error) {
     console.log(error);
-    res.status(400).send(error);
+    res.status(400).json({error: req.t('internalServerError')});
   }
 };
 
@@ -39,17 +39,17 @@ exports.loginUser = async (req, res) => {
       const user = await User.findOne({ email: email });
 
       if (!user || !(await user.comparePassword(password))) {
-        return res.status(404).json({ error: 'Invalid email or password' });
+        return res.status(404).json({ error: req.t('invalidCredentials') });
       }
   
        // Generate JWT Token for the user
       const token = generateToken(
       { id: user._id, role: user.role }, 
       process.env.JWT_SECRET, { expiresIn: '1h' });
-      res.status(200).json({ token });
+      res.status(200).json({ message: req.t('loginSuccess'), token });
     } catch (err) {
       console.error(err);
-      res.status(500).json({ error: 'Internal Server Error' });
+      res.status(500).json({ error: req.t('internalServerError') });
     }
   };
 
