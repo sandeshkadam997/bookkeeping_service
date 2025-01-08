@@ -1,6 +1,7 @@
 const { generateToken } = require('../jwt');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
+const messages = require('../utils/multilingual');
 
 exports.registerUser = async (req, res) => {
     console.log('Request received:', req.body);
@@ -22,7 +23,7 @@ exports.registerUser = async (req, res) => {
     const token = generateToken(
         { _id: newUser._id, role: newUser.role }, 
          process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.status(200).json({ response: req.t('userCreated'), token: token });
+        res.status(200).json({ message: req.t('userCreated'), User: newUser, token: token });
 
   } catch (error) {
     console.log(error);
