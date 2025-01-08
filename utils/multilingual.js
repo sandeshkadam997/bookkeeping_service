@@ -11,7 +11,7 @@ const messages = {
       errorFetchingBook: "Error fetching book",
       errorCreatingBook: "Error creating book",
       errorUpdatingBook: "Error updating book",
-      bookCreatedSuccessfully: "Library created successfully",
+      bookCreatedSuccessfully: "Book created successfully",
       bookUpdatedSuccessfully: "Book updated successfully",
       bookDeletedSuccessfully: "Book deleted successfully",
       errorDeletingBook: "Error deleting book",
