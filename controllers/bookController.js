@@ -31,7 +31,7 @@ console.log('Request received:', req.body);
     const newBook = new Book(bookData);
     await newBook.save();
     console.log('Book saved:', req.body);
-    res.status(201).json(newBook);
+    res.status(201).json({ message: req.t('bookCreatedSuccessfully'), Book: newBook });
   } catch (error) {
     res.status(400).json({ error: req.t('errorCreatingBook') });
   }
