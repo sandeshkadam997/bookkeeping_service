@@ -26,7 +26,7 @@ exports.borrowBook = async (req, res) => {
 
 exports.returnBook = async (req, res) => {
     const { bookId } = req.params;
-    const borrowerId  = req.body;
+    const borrowerId  = req.body.borrowerId;
 
     console.log("BookId:", bookId);
     console.log("Request User ID:", borrowerId);
